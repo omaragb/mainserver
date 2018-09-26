@@ -30,13 +30,13 @@ public class DbSeeder implements CommandLineRunner {
         Server server1 =  new Server("server1",Arrays.asList(k1,k2));
         Server server2 =  new Server("server2",Arrays.asList(k3,k4));
         Server server3 =  new Server("server2",Arrays.asList(k3,k4));
-        Technician t = new Technician("Abed1");
+        Technician t = new Technician("Abed1","abed@1.com");
         t.addKiosk(k1);
         this.techRepository.deleteAll();
         this.techRepository.insert(t);
-        this.techRepository.insert(new Technician("Abed2"));
-        this.techRepository.insert(new Technician("Abed3"));
-        this.techRepository.insert(new Technician("Abed4"));
+        this.techRepository.insert(new Technician("Abed2","abed@2.com"));
+        this.techRepository.insert(new Technician("Abed3","abed@3.com"));
+        this.techRepository.insert(new Technician("Abed4","abed@4.com"));
         //drop the fuck everything
         this.serverRepository.deleteAll();
         //add to the DB

@@ -14,9 +14,10 @@ public class Technician {
     private List<Kiosk> jobs;
     private String email;
 
-    public Technician(String techName) {
+    public Technician(String techName,String email) {
         this.techName = techName;
         this.jobs = new ArrayList<>();
+        this.email = email;
     }
 
     public String getId() {
@@ -32,5 +33,9 @@ public class Technician {
     }
     public void addKiosk(Kiosk kiosk){
         jobs.add(kiosk);
+    }
+
+    public String getEmail() {
+        return email;
     }
 }
