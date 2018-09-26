@@ -15,7 +15,7 @@ public class Server {
     private String name;
     @Indexed(direction = IndexDirection.ASCENDING)
     private List<Kiosk> kiosks;
-    private String isGood;
+    private String Good;
     protected Server(){this.kiosks = new ArrayList<>();}
 
     public Server(String name, List<Kiosk> kiosks) {

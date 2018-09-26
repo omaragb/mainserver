@@ -7,7 +7,7 @@ public class Kiosk {
     private String macAddress;
     private String hotelName;
     private List<Devices> devices;
-    private boolean isGood;
+    private boolean Good;
     private String serverID;
     private List<KioskExceptions> exceptions;
 
@@ -17,9 +17,9 @@ public class Kiosk {
         this.devices = devices;
         this.exceptions = exceptions;
         if(exceptions.isEmpty())
-            this.isGood = true;
+            this.Good = true;
         else
-            this.isGood = false;
+            this.Good = false;
     }
     protected Kiosk(){}
 
@@ -45,7 +45,7 @@ public class Kiosk {
     }
 
     public boolean isGood() {
-        return isGood;
+        return Good;
     }
 
     public List<KioskExceptions> getExceptions() {
