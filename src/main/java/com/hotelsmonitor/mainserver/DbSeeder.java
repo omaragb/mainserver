@@ -10,15 +10,17 @@ import java.util.List;
 @Component
 public class DbSeeder implements CommandLineRunner {
     private ServerRepository serverRepository;
-
-    public DbSeeder(ServerRepository serverRepository) {
+    private TechRepository techRepository;
+    public DbSeeder(ServerRepository serverRepository,TechRepository techRepository) {
         this.serverRepository = serverRepository;
+        this.techRepository = techRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
         Kiosk k1 = new Kiosk("macAdd1","Heloton,Beersheva",
-                Arrays.asList(Devices.PAINTER,Devices.AC,Devices.CASH_READER,Devices.CREDIT_READER),new ArrayList<>());
+                Arrays.asList(Devices.PAINTER,Devices.AC,Devices.CASH_READER,Devices.CREDIT_READER),Arrays.asList(new KioskExceptions("YELLOW",
+                "Fucking","12/8/2018-20:48")));
         Kiosk k2 =new Kiosk("macAdd1","Heloton,Beersheva",
                 Arrays.asList(Devices.PAINTER,Devices.AC,Devices.CASH_READER,Devices.CREDIT_READER),new ArrayList<>());
         Kiosk k3 = new Kiosk("macAdd3","Shraton,Tel Aviv",
@@ -28,7 +30,13 @@ public class DbSeeder implements CommandLineRunner {
         Server server1 =  new Server("server1",Arrays.asList(k1,k2));
         Server server2 =  new Server("server2",Arrays.asList(k3,k4));
         Server server3 =  new Server("server2",Arrays.asList(k3,k4));
-
+        Technician t = new Technician("Abed1");
+        t.addKiosk(k1);
+        this.techRepository.deleteAll();
+        this.techRepository.insert(t);
+        this.techRepository.insert(new Technician("Abed2"));
+        this.techRepository.insert(new Technician("Abed3"));
+        this.techRepository.insert(new Technician("Abed4"));
         //drop the fuck everything
         this.serverRepository.deleteAll();
         //add to the DB

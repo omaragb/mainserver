@@ -12,6 +12,7 @@ public class Technician {
     private String Id;
     private String techName;
     private List<Kiosk> jobs;
+    private String email;
 
     public Technician(String techName) {
         this.techName = techName;

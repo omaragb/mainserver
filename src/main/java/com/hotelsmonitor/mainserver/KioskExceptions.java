@@ -2,6 +2,7 @@ package com.hotelsmonitor.mainserver;
 
 public class KioskExceptions {
 
+
     private String Id;
     private String exType;
     private String exceptionDisc;
