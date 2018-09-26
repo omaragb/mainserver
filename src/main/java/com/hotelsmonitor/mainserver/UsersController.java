@@ -1,19 +1,32 @@
 package com.hotelsmonitor.mainserver;
 
-import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
-import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder;
-import com.amazonaws.services.identitymanagement.model.GetUserRequest;
-import com.amazonaws.services.identitymanagement.model.User;
-import org.springframework.web.bind.annotation.*;
-
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class UsersController {
-    AmazonIdentityManagement amazonIdentityManagement = AmazonIdentityManagementClientBuilder.defaultClient();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-//    @PostMapping("/singIn")
-//    public void signIn(@PathVariable String userName, @PathVariable String password){
-//       User user = amazonIdentityManagement.getUser(new GetUserRequest().withUserName(userName)).getUser();
-//        Signin
-//    }
+    @PostMapping("/createUser")
+    public void addUser(@RequestBody User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        this.userRepository.insert(user);
+    }
+    @PostMapping("/signin")
+    public void singIn(@RequestBody User user){
+        passwordEncoder.matches(user.getPassword(),this.userRepository.findUserByName(user.getName()).getPassword());
+    }
 }

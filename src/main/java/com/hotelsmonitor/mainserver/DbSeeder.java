@@ -19,18 +19,20 @@ public class DbSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Kiosk k1 = new Kiosk("macAdd1","Heloton,Beersheva",
                 Arrays.asList(Devices.PAINTER,Devices.AC,Devices.CASH_READER,Devices.CREDIT_READER),new ArrayList<>());
-        Kiosk k2 = new Kiosk("macAdd2","Heloton,TelAviv",
-                Arrays.asList(Devices.PAINTER,Devices.AC,Devices.CASH_READER,Devices.CREDIT_READER),Arrays.asList("Painter"));
+        Kiosk k2 =new Kiosk("macAdd1","Heloton,Beersheva",
+                Arrays.asList(Devices.PAINTER,Devices.AC,Devices.CASH_READER,Devices.CREDIT_READER),new ArrayList<>());
         Kiosk k3 = new Kiosk("macAdd3","Shraton,Tel Aviv",
                 Arrays.asList(Devices.PAINTER,Devices.AC,Devices.CASH_READER,Devices.CREDIT_READER),new ArrayList<>());
         Kiosk k4 = new Kiosk("macAdd4","Sheraton,Cairo",
                 Arrays.asList(Devices.PAINTER,Devices.AC,Devices.CASH_READER,Devices.CREDIT_READER),new ArrayList<>());
         Server server1 =  new Server("server1",Arrays.asList(k1,k2));
         Server server2 =  new Server("server2",Arrays.asList(k3,k4));
+        Server server3 =  new Server("server2",Arrays.asList(k3,k4));
+
         //drop the fuck everything
         this.serverRepository.deleteAll();
         //add to the DB
-        List<Server> servers = Arrays.asList(server1,server2);
+        List<Server> servers = Arrays.asList(server1,server2,server3);
         this.serverRepository.saveAll(servers);
     }
 }

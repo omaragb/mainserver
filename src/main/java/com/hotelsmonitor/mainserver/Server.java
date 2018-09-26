@@ -15,18 +15,28 @@ public class Server {
     private String name;
     @Indexed(direction = IndexDirection.ASCENDING)
     private List<Kiosk> kiosks;
-
+    private String isGood;
     protected Server(){this.kiosks = new ArrayList<>();}
 
     public Server(String name, List<Kiosk> kiosks) {
         this.name = name;
         this.kiosks = kiosks;
+//        isGood = getIsGood();
+    }
+
+    private boolean getIsGood() {
+        for(Kiosk k : kiosks){
+            if(k.isGood() == false) {
+//                isGood = false;
+                break;
+            }
+        }
+        return true;
     }
 
     public String getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }

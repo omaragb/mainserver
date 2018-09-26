@@ -2,16 +2,17 @@ package com.hotelsmonitor.mainserver;
 
 public class KioskExceptions {
 
-    private ExType exType;
+    private String Id;
+    private String exType;
     private String exceptionDisc;
     private String date;
-    public KioskExceptions(ExType exType, String exceptionDisc,String date) {
+    public KioskExceptions(String exType, String exceptionDisc,String date) {
         this.exType = exType;
         this.exceptionDisc = exceptionDisc;
         this.date = date;
     }
 
-    public ExType getExType() {
+    public String getExType() {
         return exType;
     }
 
@@ -23,4 +24,3 @@ public class KioskExceptions {
         return date;
     }
 }
-enum ExType{YELLOW,RED}
