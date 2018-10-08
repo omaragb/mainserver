@@ -56,11 +56,11 @@ public class TechniciansController {
         return tech.getJobs();
     }
     // HttpRequest Update that some Technician fixed some Kiosk and remove the Job from the techniician jobs queue
-    @PostMapping("/updateKiosk/{email}/")
-    public void updateKioskFix(@PathVariable String email,@RequestBody String job){
-        Gson gson = new Gson();
-        Job j = gson.fromJson(job,Job.class);
-
+    @CrossOrigin
+    @PostMapping("/updateKiosk/{email}/{problem}/{macAdd}/{date}")
+    public void updateKioskFix(@PathVariable String email,@PathVariable String problem,
+                               @PathVariable String macAdd,@PathVariable String date){
+        Job j = new Job(macAdd,problem,date);
         /// Update the Technician Jobs in the DB
         Technician technician = this.techRepository.findByEmail(email);
 
@@ -70,7 +70,6 @@ public class TechniciansController {
                 break;
             }
         }
-        this.userRepository.deleteByEmail(email);
         this.techRepository.save(technician);
 
 
