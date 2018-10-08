@@ -1,20 +1,22 @@
 package com.hotelsmonitor.mainserver;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.List;
 
+@Document(collection = "servers")
 public class Kiosk {
-    private String Id;
     private String macAddress;
     private String hotelName;
-    private List<Devices> devices;
     private boolean Good;
     private String serverID;
+    //Kiosk Inctance
     private List<KioskExceptions> exceptions;
 
-    public Kiosk(String macAddress, String hotelName, List<Devices> devices, List<KioskExceptions> exceptions) {
+    public Kiosk(String macAddress, String hotelName, List<KioskExceptions> exceptions) {
         this.macAddress = macAddress;
         this.hotelName = hotelName;
-        this.devices = devices;
         this.exceptions = exceptions;
         if(exceptions.isEmpty())
             this.Good = true;
@@ -28,10 +30,6 @@ public class Kiosk {
         this.exceptions = exceptions;
     }
 
-    public String getId() {
-        return Id;
-    }
-
     public String getMacAddress() {
         return macAddress;
     }
@@ -40,9 +38,7 @@ public class Kiosk {
         return hotelName;
     }
 
-    public List<Devices> getDevices() {
-        return devices;
-    }
+
 
     public boolean isGood() {
         return Good;
@@ -50,6 +46,10 @@ public class Kiosk {
 
     public List<KioskExceptions> getExceptions() {
         return exceptions;
+    }
+
+    public void setServerID(String serverID) {
+        this.serverID = serverID;
     }
 
     public String getServerID() {

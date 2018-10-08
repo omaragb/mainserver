@@ -3,18 +3,29 @@ package com.hotelsmonitor.mainserver;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+
+// Representation of a User in the system
 @Document(collection = "users")
 public class User {
     @Id
     private String id;
     private String name;
-    private Type type;
+    private String email;
+    private Type type; // if he is the System Admin / Local Admin / Technician
     private String password;
 
-    public User(String name, Type type, String password) {
+    public User(String name, String email, Type type, String password) {
         this.name = name;
+        this.email = email;
         this.type = type;
         this.password = password;
+    }
+
+    public User() {
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setPassword(String password) {
@@ -36,6 +47,17 @@ public class User {
 
     public Type getType() {
         return type;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", type=" + type +
+                ", password='" + password + '\'' +
+                '}';
     }
 
     public String getPassword() {

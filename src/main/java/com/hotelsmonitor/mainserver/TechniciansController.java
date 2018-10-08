@@ -1,5 +1,7 @@
 package com.hotelsmonitor.mainserver;
 
+import com.google.gson.Gson;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,54 +11,69 @@ import java.util.List;
 @RequestMapping("/users")
 public class TechniciansController {
     private TechRepository techRepository;
+    private UserRepository userRepository;
     private ServerRepository serverRepository;
-    public TechniciansController(TechRepository techRepository) {
+    public TechniciansController(TechRepository techRepository, UserRepository userRepository, ServerRepository serverRepository) {
         this.techRepository = techRepository;
+        this.userRepository = userRepository;
+        this.serverRepository = serverRepository;
     }
+    // HttpRequest Get all Technicians
     @GetMapping("/all")
     public List<Technician> getAll(){
         List<Technician> techs = this.techRepository.findAll();
         return techs;
     }
-    @GetMapping("/getFree")
-    public Technician getFreeTech(){
-        Technician tech = null;
-        int i = 100000;
-        for(Technician t : this.techRepository.findAll())
-        {
-            if(t.getJobs().size() < i){
-                i = t.getJobs().size();
-                tech = t;
-            }
-        }
-        return tech;
+    // HttpRequest add new Technician, also we creat a new User for the Technician
+    @PostMapping("/addTech/{techName}/{email}")
+    public void addNewTechman(@PathVariable String techName,@PathVariable String email,@RequestBody String password){
+        JSONObject passJson = new JSONObject(password);
+        this.techRepository.insert(new Technician(techName,password,email));
+        this.userRepository.insert(new User(techName,email,Type.TECH,passJson.get("password").toString()));
+
     }
-    @PostMapping
-    public void addNewTechman(@RequestBody Technician techman){
-        this.techRepository.insert(techman);
+    // HttpRequest Assign a problem to a technician for which needs a fix by adding the relevant kiosk as a job to the technician jobs queue
+    @PostMapping("/assign/{techID}/{macAddress}/{problem}/{date}")
+    public void assingTechToFix(@PathVariable String techID,@PathVariable String macAddress,@PathVariable String problem
+    ,@PathVariable String date){
+        System.out.println(techID + " " + problem);
+        Technician technician = this.techRepository.getById(techID);
+        technician.addKiosk(new Job(macAddress,problem,date));
+        this.techRepository.save(technician);
     }
-    @PostMapping("/assign")
-    public void assingTechToFix(@PathVariable String techID,@RequestBody Kiosk kiosk){
-        this.techRepository.findById(techID).get().addKiosk(kiosk);
+    // HttpRequest  Delete A technician and delete the user created for him
+    @DeleteMapping("/delete/{techId}")
+    public void deleteTech(@PathVariable String techId){
+        Technician userToDelete = this.techRepository.findById(techId).get();
+        String usermailToDelete = userToDelete.getEmail();
+        this.techRepository.deleteById(techId);
+        this.userRepository.deleteByEmail(usermailToDelete);
     }
-    @DeleteMapping("/{id}")
-    public void deleteTech(@PathVariable String techID){
-        this.techRepository.deleteById(techID);
-    }
-    @GetMapping("/{techID}")
-    public List<Kiosk> getKiosksWithProblemsForTech(@PathVariable String techID){
-        Technician tech = this.techRepository.findById(techID).get();
+    // // HttpRequest  get all the Jobs in some Technician Jobs queue
+    @GetMapping("/{email}")
+    public List<Job> getKiosksWithProblemsForTech(@PathVariable String email){
+        Technician tech = this.techRepository.findByEmail(email);
         return tech.getJobs();
     }
-    @PostMapping("/updateKiosk/{techID}")
-    public void updateKioskFix(@PathVariable String techID,@RequestBody Kiosk kiosk){
-        this.techRepository.findById(techID).get().getJobs().remove(kiosk);
-        for(Kiosk k :this.serverRepository.findById(kiosk.getServerID()).get().getKiosks()){
-            if (k.getMacAddress().equals(kiosk.getMacAddress())) {
-                this.serverRepository.findById(kiosk.getServerID()).get().getKiosks().remove(k);
-                this.serverRepository.findById(kiosk.getServerID()).get().getKiosks().add(kiosk);
+    // HttpRequest Update that some Technician fixed some Kiosk and remove the Job from the techniician jobs queue
+    @PostMapping("/updateKiosk/{techID}/")
+    public void updateKioskFix(@PathVariable String techID,@RequestBody String job){
+        Gson gson = new Gson();
+        Job j = gson.fromJson(job,Job.class);
+
+        /// Update the Technician Jobs in the DB
+        Technician technician = this.techRepository.getById(techID);
+
+        for(Job jIter : technician.getJobs()){
+            if (jIter.equals(j)){
+                technician.removeJob(jIter);
                 break;
             }
         }
+        this.techRepository.deleteById(techID);
+        this.techRepository.save(technician);
+
+
+
     }
 }
