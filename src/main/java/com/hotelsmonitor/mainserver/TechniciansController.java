@@ -56,13 +56,13 @@ public class TechniciansController {
         return tech.getJobs();
     }
     // HttpRequest Update that some Technician fixed some Kiosk and remove the Job from the techniician jobs queue
-    @PostMapping("/updateKiosk/{techID}/")
-    public void updateKioskFix(@PathVariable String techID,@RequestBody String job){
+    @PostMapping("/updateKiosk/{email}/")
+    public void updateKioskFix(@PathVariable String email,@RequestBody String job){
         Gson gson = new Gson();
         Job j = gson.fromJson(job,Job.class);
 
         /// Update the Technician Jobs in the DB
-        Technician technician = this.techRepository.getById(techID);
+        Technician technician = this.techRepository.findByEmail(email);
 
         for(Job jIter : technician.getJobs()){
             if (jIter.equals(j)){
@@ -70,7 +70,7 @@ public class TechniciansController {
                 break;
             }
         }
-        this.techRepository.deleteById(techID);
+        this.userRepository.deleteByEmail(email);
         this.techRepository.save(technician);
 
 
