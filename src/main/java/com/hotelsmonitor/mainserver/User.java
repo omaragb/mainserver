@@ -13,12 +13,25 @@ public class User {
     private String email;
     private Type type; // if he is the System Admin / Local Admin / Technician
     private String password;
+    private String serverIdForAdmin;
 
     public User(String name, String email, Type type, String password) {
         this.name = name;
         this.email = email;
         this.type = type;
         this.password = password;
+    }
+
+    public User(String name, String email, Type type, String password, String serverIdForAdmin) {
+        this.name = name;
+        this.email = email;
+        this.type = type;
+        this.password = password;
+        this.serverIdForAdmin = serverIdForAdmin;
+    }
+
+    public String getServerIdForAdmin() {
+        return serverIdForAdmin;
     }
 
     public User() {

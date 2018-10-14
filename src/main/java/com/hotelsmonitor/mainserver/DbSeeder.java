@@ -26,7 +26,9 @@ public class DbSeeder implements CommandLineRunner {
                      Arrays.asList(new KioskExceptions("YELLOW",
                     "Printer Error", "12/8/2018-20:48"),
                              new KioskExceptions("RED",
-                                     "Scanner Exploded !", "18/8/2018-20:48")));
+                                     "Scanner Exploded !", "18/8/2018-20:48"),
+                             new KioskExceptions("RED",
+                                     "Coins are Raining  !", "18/8/2018-20:49")));
             Kiosk k2 = new Kiosk("macAdd2", "Heloton,Beersheva",
                     new ArrayList<>());
             Kiosk k3 = new Kiosk("macAdd3", "Shraton,Tel Aviv",
@@ -45,10 +47,12 @@ public class DbSeeder implements CommandLineRunner {
             this.techRepository.save(new Technician("Abed4","12345", "abed@4.com"));
             this.userRepository.deleteAll();
             this.userRepository.save(new User("Mohammed", "wattk308@gmail.com", Type.SYS_ADMIN, "1234"));
-            this.userRepository.save(new User("abed", "abed@gmail.com", Type.LOCAL_ADMIN, "1234"));
-            this.userRepository.save(new User("khaled", "khaled@gmail.com", Type.TECH, "1234"));
+            this.userRepository.save(new User("abed", "abed@gmail.com", Type.SYS_ADMIN, "1234"));
             this.userRepository.save(new User("Abed1","abed@1.com",Type.TECH,"12345"));
-            //drop the fuck everything
+            this.userRepository.save(new User("omar1","omar1@gmail.com",Type.LOCAL_ADMIN,"1234",server1.getName()));
+            this.userRepository.save(new User("omar2","omar2@gmail.com",Type.LOCAL_ADMIN,"1234",server2.getName()));
+            this.userRepository.save(new User("omar3","omar3@gmail.com",Type.LOCAL_ADMIN,"1234",server3.getName()));
+        //drop the fuck everything
             this.serverRepository.deleteAll();
             //add to the DB
             List<Server> servers = Arrays.asList(server1, server2, server3);

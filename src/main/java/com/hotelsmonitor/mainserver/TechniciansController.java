@@ -37,10 +37,29 @@ public class TechniciansController {
     public void assingTechToFix(@PathVariable String techID,@PathVariable String macAddress,@PathVariable String problem
     ,@PathVariable String date){
         System.out.println(techID + " " + problem);
+        checkFixInKiosk(macAddress,problem);
         Technician technician = this.techRepository.getById(techID);
         technician.addKiosk(new Job(macAddress,problem,date));
         this.techRepository.save(technician);
     }
+
+    private void checkFixInKiosk(String macAddress, String problem) {
+        List<Server> servers = this.serverRepository.findAll();
+        for(Server server :servers){
+            for(Kiosk kiosk : server.getKiosks()){
+                if(kiosk.getMacAddress().equals(macAddress)){
+                    for(KioskExceptions ke : kiosk.getExceptions()){
+                        if(ke.getExceptionDisc().equals(problem)){
+                            ke.setInProgress("InProgress");
+                            this.serverRepository.save(server);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // HttpRequest  Delete A technician and delete the user created for him
     @DeleteMapping("/delete/{techId}")
     public void deleteTech(@PathVariable String techId){

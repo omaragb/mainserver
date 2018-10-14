@@ -21,6 +21,11 @@ public class ServersController {
         List<Server> hotels = this.serverRepository.findAll();
         return hotels;
     }
+    @CrossOrigin
+    @GetMapping("/GetServer/{serverIdForAdmin}")
+    public Server getServer(@PathVariable String serverIdForAdmin){
+        return this.serverRepository.getByName(serverIdForAdmin);
+    }
     // HttpRequest  each time a Local servers POST a status update of the Kiosks sstatus, in this method we update the DB according to the status
     //Synchronized, we want a kiosk to be updated at a time , otherwise it creates unwanted copies of servers and kiosks
     @PostMapping("/GetReport")
@@ -71,8 +76,8 @@ public class ServersController {
     public void delete(@PathVariable("id") String id){
         this.serverRepository.deleteById(id);
     }
-    @GetMapping("/{id}")
-    public Server getById(@PathVariable("id") String id){
-        return this.serverRepository.getById(id);
-    }
+//    @GetMapping("/{id}")
+//    public Server getById(@PathVariable("id") String id){
+//        return this.serverRepository.getById(id);
+//    }
 }
